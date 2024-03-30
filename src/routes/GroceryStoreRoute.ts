@@ -4,6 +4,16 @@ import GroceryStoreController from "../controllers/GroceryStoreController";
 
 const router = express.Router();
 
+router.get(
+  "/:groceryStoreId",
+  param("groceryStoreId")
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage("groceryStoreId paramenter must be a valid string"),
+  GroceryStoreController.getGroceryStore
+);
+
 
 router.get(
   "/search/:city",

@@ -1,6 +1,21 @@
 import { Request, Response } from "express";
 import GroceryStore from "../models/groceryStore";
 
+const getGroceryStore = async (req: Request, res: Response) => {
+  try {
+    const groceryStoretId = req.params.groceryStoreId;
+
+    const groceryStore = await GroceryStore.findById(groceryStoretId);
+    if (!groceryStore) {
+      return res.status(404).json({ message: "Grocery-Store not found" });
+    }
+    res.json(groceryStore);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
 
 const searchGroceryStore = async (req: Request, res: Response) => {
     try {
@@ -71,5 +86,6 @@ const searchGroceryStore = async (req: Request, res: Response) => {
 };
 
 export default {
+getGroceryStore,  
 searchGroceryStore,
 };
