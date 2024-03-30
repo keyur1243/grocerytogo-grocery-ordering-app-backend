@@ -42,7 +42,7 @@ const searchGroceryStore = async (req: Request, res: Response) => {
         ];
       }
   
-      const pageSize = 5;
+      const pageSize = 7;
       const skip = (page - 1) * pageSize;
   
       // sortOption = "lastUpdated"
