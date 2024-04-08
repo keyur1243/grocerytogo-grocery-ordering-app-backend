@@ -1,11 +1,18 @@
-const mongoose = require('mongoose');
+import mongoose, { InferSchemaType } from "mongoose";
 
 const productSchema = new mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    default: () => new mongoose.Types.ObjectId(),
+  },
   productName: { type: String, required: true },
   category: { type: String, required: true }, // You can consider using a single category for each item
   price: { type: Number, required: true },
   description: { type: String, required: true },
 });
+
+export type ProductType = InferSchemaType<typeof productSchema>;
 
 const groceryStoreSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

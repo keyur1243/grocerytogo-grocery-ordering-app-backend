@@ -1,4 +1,4 @@
-import  Express, {Request, Response}  from "express";
+import  express, {Request, Response}  from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -6,7 +6,7 @@ import myUserRoute from "./routes/MyUserRoute";
 import {v2 as cloudinary } from "cloudinary";
 import GroceryStoreRoutes from "./routes/GroceryStoreRoute";
 import myGroceryStoreRoutes from "./routes/myGroceryStoreRoute";
-
+import orderRoute from "./routes/OrderRoutes";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(()=>console.log("Connected to MongoDB Database"));
 
@@ -16,9 +16,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const app = Express();
-app.use(Express.json());
+const app = express();
+
 app.use(cors());
+
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+
+app.use(express.json());
 
 app.get("/health", async (req: Request, res: Response)=>{
     res.send({ message: "health OK!"});
@@ -27,6 +31,7 @@ app.get("/health", async (req: Request, res: Response)=>{
 app.use("/api/my/user", myUserRoute);
 app.use("/api/my/groceryStore", myGroceryStoreRoutes);
 app.use("/api/groceryStore", GroceryStoreRoutes);
+app.use("/api/order", orderRoute);
 
 app.listen(5050, ()=>{
     console.log("Server started on localhost:5050");
