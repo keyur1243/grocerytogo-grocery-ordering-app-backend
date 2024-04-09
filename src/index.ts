@@ -4,8 +4,8 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/MyUserRoute";
 import {v2 as cloudinary } from "cloudinary";
-import GroceryStoreRoutes from "./routes/GroceryStoreRoute";
-import myGroceryStoreRoutes from "./routes/myGroceryStoreRoute";
+import myGroceryStoreRoute from "./routes/MyGroceryStoreRoute";
+import groceryStoreRoutes from "./routes/GroceryStoreRoute";
 import orderRoute from "./routes/OrderRoutes";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(()=>console.log("Connected to MongoDB Database"));
@@ -29,8 +29,8 @@ app.get("/health", async (req: Request, res: Response)=>{
 })
 
 app.use("/api/my/user", myUserRoute);
-app.use("/api/my/groceryStore", myGroceryStoreRoutes);
-app.use("/api/groceryStore", GroceryStoreRoutes);
+app.use("/api/my/groceryStore", myGroceryStoreRoute);
+app.use("/api/groceryStore", groceryStoreRoutes);
 app.use("/api/order", orderRoute);
 
 app.listen(5050, ()=>{

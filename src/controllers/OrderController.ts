@@ -6,21 +6,36 @@ import Order from "../models/order";
 const STRIPE = new Stripe(process.env.STRIPE_API_KEY as string);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
-// const getMyOrders = async (req: Request, res: Response) => {
-//   try {
-//     const orders = await Order.find({ user: req.userId })
-//       .populate("GroceryStore")
-//       .populate("user");
 
-//     res.json(orders);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: "something went wrong" });
-//   }
-// };
+const getMyOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find({ user: req.userId })
+      .populate("groceryStore")
+      .populate("user");
 
-   const stripeWebhookHandler = async (req: Request, res: Response) => {
-        
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+type CheckoutSessionRequest = {
+  cartItems: {
+    productId: any;
+    productName: string;
+    quantity: string;
+  }[];
+  deliveryDetails: {
+    email: string;
+    name: string;
+    addressLine1: string;
+    city: string;
+  };
+  groceryStoreId: string;
+};
+
+   const stripeWebhookHandler = async (req: Request, res: Response) => {  
      let event;
   
      try {
@@ -49,25 +64,8 @@ const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
     }
   
      res.status(200).send();
-
  }; 
-
-type CheckoutSessionRequest = {
-  cartItems: {
-    productId: any;
-    productName: string;
-    quantity: string;
-  }[];
-  deliveryDetails: {
-    email: string;
-    name: string;
-    addressLine1: string;
-    city: string;
-  };
-  groceryStoreId: string;
-};
  
-
 const createCheckoutSession = async (req: Request, res: Response) => {
   try { 
      const checkoutSessionRequest: CheckoutSessionRequest = req.body;
@@ -107,7 +105,6 @@ const createCheckoutSession = async (req: Request, res: Response) => {
 
     await newOrder.save();
     res.json({ url: session.url });
-
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ message: error.raw.message });
@@ -177,7 +174,7 @@ const createSession = async (
 };
 
 export default {
-  //getMyOrders,
+  getMyOrders,
   createCheckoutSession,
   stripeWebhookHandler,
 };

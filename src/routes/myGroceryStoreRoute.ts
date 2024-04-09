@@ -15,6 +15,8 @@ const upload = multer({
 });
 
 // /api/my/groceryStore
+router.get("/order", jwtCheck, jwtParse, MyGroceryStoreController.getMyGroceryStoreOrders);
+router.patch("/order/:orderId/status",jwtCheck,jwtParse,MyGroceryStoreController.updateOrderStatus);
 router.get("/", jwtCheck, jwtParse, MyGroceryStoreController.getMyGroceryStore);
 router.post("/" ,upload.single("imageFile"),validateMyGroceryStoreRequest,jwtCheck,jwtParse, MyGroceryStoreController.createMyGroceryStore);
 
