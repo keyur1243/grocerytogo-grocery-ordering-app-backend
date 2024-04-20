@@ -4,6 +4,14 @@ import GroceryStoreController from "../controllers/GroceryStoreController";
 
 const router = express.Router();
 
+
+// route for fetching random grocery stores
+router.get(
+  '/random',
+  GroceryStoreController.getRandomGroceryStores
+)
+
+
 router.get(
   "/:groceryStoreId",
   param("groceryStoreId")
@@ -24,5 +32,7 @@ router.get(
     .withMessage("City paramenter must be a valid string"),
     GroceryStoreController.searchGroceryStore
 );
+
+
 
 export default router;

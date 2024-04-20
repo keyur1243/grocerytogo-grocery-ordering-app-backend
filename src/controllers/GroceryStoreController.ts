@@ -17,6 +17,29 @@ const getGroceryStore = async (req: Request, res: Response) => {
 };
 
 
+const getRandomGroceryStores = async (req: Request, res: Response) => {
+
+  try {
+
+    const groceryStores = await GroceryStore.aggregate([{ $sample: { size: 3 } }]);
+    
+    if (groceryStores.length === 0) {
+      return res.status(404).json({ message: "No grocery stores found" });
+    }
+    
+    // random grocery stores as the response
+    res.json(groceryStores);
+
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong!" });
+
+  }
+};
+
+
+
 const searchGroceryStore = async (req: Request, res: Response) => {
     try {
       const city = req.params.city;
@@ -88,4 +111,5 @@ const searchGroceryStore = async (req: Request, res: Response) => {
 export default {
 getGroceryStore,  
 searchGroceryStore,
+getRandomGroceryStores
 };
